@@ -6,30 +6,14 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
     Button,
-    Alert,
   } from 'react-native';
-
-import {
-    Colors,
-} from 'react-native/Libraries/NewAppScreen';
-
-import ActionBar from 'react-native-action-bar';
-import { RNVoiceRecorder } from 'react-native-voice-recorder';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {RNVoiceRecorder} from 'react-native-voice-recorder';
 
 export default function Home({ navigation }) {
         return (
         <>
-            <StatusBar barStyle="light-content" />
-            <ActionBar 
-              allowFontScaling={true}
-              containerStyle={styles.bar}
-              titleStyle={styles.barText}
-              backgroundColor={"#2196F3"}
-              title={'UnDanger'}/>
             <SafeAreaView style={styles.scrollView}>
               <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
