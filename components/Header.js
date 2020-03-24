@@ -1,10 +1,9 @@
 /* eslint-disable prettier/prettier */
-import React from 'react'
+import React from 'react';
 import {
     StyleSheet,
     View,
     Text,
-    Component,
   } from 'react-native';
 
 export default function Header(props) {
