@@ -22,6 +22,7 @@ const Stack = createStackNavigator();
 const initialState = {
   username: '',
   password: '',
+  emergency: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -31,7 +32,11 @@ const reducer = (state = initialState, action) => {
           console.log(action.payload);
           return action.payload;
       case 'LOGOUT':
-          return { username: "", password: "" };
+          return { username: '', password: '', emergency: [] };
+      case 'SET_EMERGENCY_CONTACTS':
+          state.emergency = action.payload;
+          console.log(state);
+          return state;
   }
   return state;
 };

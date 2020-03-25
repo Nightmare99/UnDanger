@@ -8,15 +8,22 @@ import {
   SafeAreaView,
   FlatList,
   ActivityIndicator,
+  Button,
 } from 'react-native';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
-export default class ContactList extends React.Component {
+import FAB from 'react-native-fab';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import _ from 'lodash';
+import {connect} from 'react-redux';
+
+class ContactList extends React.Component {
   constructor() {
     super();
     this.state = {
       isLoading: false,
       contacts: [],
+      selected: [],
     };
   }
 
@@ -39,6 +46,7 @@ export default class ContactList extends React.Component {
               data.push({firstName: contact['givenName'],
                 lastName: contact['familyName'],
                 phoneNumbers: contact['phoneNumbers'],
+                selected: false,
               });
           }
           //console.log(data);
@@ -58,7 +66,24 @@ export default class ContactList extends React.Component {
   }
 
   renderItem = ({ item }) => (
-    <View style={{ minHeight: 70, padding: 5 }}>
+    <TouchableOpacity 
+      style={{ minHeight: 70, padding: 5, backgroundColor: item.selected ? '#cccccc' : 'white', }}
+      onPress={() => {
+          item.selected = !item.selected;
+          var newSelected = this.state.selected;
+          if (item.selected) {
+            newSelected.push({name: item.firstName + ' ' + item.lastName, phone: item.phoneNumbers[0].number});
+            this.setState({ selected: newSelected });
+            console.log(newSelected);
+          }
+          else {
+              _.remove(newSelected, {name: item.firstName + ' ' + item.lastName, phone: item.phoneNumbers[0].number});
+              this.setState({ selected: newSelected });
+              console.log(newSelected);
+          }
+        }
+      }
+    >
       <Text style={{ color: '#2196F3', fontWeight: 'bold', fontSize: 26 }}>
         {item.firstName + ' '}
         {item.lastName}
@@ -66,7 +91,7 @@ export default class ContactList extends React.Component {
       <Text style={{ color: 'black', fontWeight: 'bold' }}>
         {item.phoneNumbers[0].number}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   searchContacts = value => {
@@ -87,7 +112,7 @@ export default class ContactList extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        
+
         <TextInput
           placeholder="Search"
           placeholderTextColor="#dddddd"
@@ -132,16 +157,30 @@ export default class ContactList extends React.Component {
             )}
           />
         </View>
+        <FAB 
+          buttonColor="green"
+          iconTextColor="#FFFFFF"
+          onClickAction={() => {
+            console.log("Emergency contacts set!");
+            this.props.setEmergency(this.state.selected);
+            this.props.navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            });
+            }
+          }
+          visible={true}
+          iconTextComponent={<Text>✓</Text>}
+        />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
+function mapDispatchToProps(dispatch) {
+  return {
+      setEmergency: (emergency) => dispatch({ type: 'SET_EMERGENCY_CONTACTS', payload: emergency }),
+  };
+}
+
+export default connect(null,mapDispatchToProps)(ContactList);
