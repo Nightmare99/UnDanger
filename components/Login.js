@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
@@ -7,8 +7,14 @@ import {
     TextInput,
     Button,
   } from 'react-native';
+import {connect} from 'react-redux';
 
-export default function Header({ navigation }) {
+class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {username: '', password: ''};
+      }
+    render() {
         return (
         <View style={styles.container}>
             <View style={styles.heading}>
@@ -16,23 +22,42 @@ export default function Header({ navigation }) {
             </View>
             <View style={styles.input}>
                 <Text>Username: </Text>
-                <TextInput/>
+                <TextInput onChangeText={(username) => this.setState({username})}/>
             </View>
             <View style={styles.input}>
                 <Text>Password: </Text>
-                <TextInput secureTextEntry={true}/>
+                <TextInput secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
             </View>
             <Text>{'\n\n\n'}</Text>
             <Button
                 title="Login"
-                onPress={() => navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Home' }],
-                })}
+                onPress={() => {
+                    var user = {
+                        username: this.state.username,
+                        password: this.state.password,
+                    };
+                    console.log(user);
+                    this.props.login(user);
+                    this.props.navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Home' }],
+                    });
+                    }
+                }
             />
         </View>
         );
+    }
 }
+
+function mapDispatchToProps(dispatch) {
+    return {
+        login: (user) => dispatch({ type: 'LOGIN', payload: user }),
+    };
+}
+
+export default connect(null,mapDispatchToProps)(Login);
+
 
 const styles = StyleSheet.create({
     container: {
