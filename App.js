@@ -9,7 +9,7 @@
 
 import React, { Component } from 'react';
 import Home from './components/Home';
-import Header from './components/Header';
+import ContactList from './components/ContactList';
 import Login from './components/Login';
 import {StatusBar} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -73,10 +73,10 @@ class App extends Component {
               }}
             />
             <Stack.Screen
-              name="Header"
-              component={Header}
+              name="ContactList"
+              component={ContactList}
               options={{
-                title: 'Dummy',
+                title: 'Select Emergency Contacts',
               }}
             />
           </Stack.Navigator>

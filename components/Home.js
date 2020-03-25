@@ -45,8 +45,8 @@ export default function Home({ navigation }) {
                     />
                     <Text>{"\n"}</Text>
                     <Button
-                        title="Go to next page"
-                        onPress={() => navigation.navigate('Header')}
+                        title="Select Emergency Contacts"
+                        onPress={() => navigation.navigate('ContactList')}
                     />
                   </View>
                 </View>
