@@ -10,6 +10,7 @@
 import React from 'react';
 import Home from './components/Home';
 import Header from './components/Header';
+import Login from './components/Login';
 import {StatusBar} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -23,19 +24,29 @@ const App: () => React$Node = () => {
         barStyle="light-content"
         backgroundColor="#2196F3"
       />
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#2196F3',
+          },
+          headerTitleStyle: {
+            color: Colors.white,
+          },
+          headerTintColor: '#fff',
+        }}
+      >
+      <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            title: 'Welcome to UnDanger',
+          }}
+        />
         <Stack.Screen
           name="Home"
           component={Home}
           options={{
             title: 'UnDanger',
-            headerStyle: {
-              backgroundColor: '#2196F3',
-            },
-            headerTitleStyle: {
-              color: Colors.white,
-            },
-            headerTintColor: '#fff',
           }}
         />
         <Stack.Screen
@@ -43,14 +54,8 @@ const App: () => React$Node = () => {
           component={Header}
           options={{
             title: 'Dummy',
-            headerStyle: {
-              backgroundColor: '#2196F3',
-            },
-            headerTitleStyle: {
-              color: Colors.white,
-            },
-            headerTintColor: '#fff',
-          }}/>
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
