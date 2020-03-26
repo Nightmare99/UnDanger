@@ -11,6 +11,33 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {RNVoiceRecorder} from 'react-native-voice-recorder';
 
+let uploadAudio = async (filePath) => {
+  const path = `file://${filePath}`;
+  console.log(path);
+  const formData = new FormData();
+  formData.append('file', {
+    uri: path,
+    name: 'test.wav',
+    type: 'audio/wav',
+  });
+  try {
+    const res = await fetch('http://192.168.43.32:8080/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'username': 'test',
+        'password': 'test',
+      },
+      body: formData,
+    });
+    console.log(res);
+    const json = await res.json();
+    console.log(json);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export default function Home({ navigation }) {
         return (
         <>
@@ -28,14 +55,15 @@ export default function Home({ navigation }) {
                     <Text style={styles.sectionTitle}>Hi</Text>
                     <Text style={styles.sectionDescription}>
                       This is a companion app for your <Text style={styles.highlight}>UnDanger</Text> wearable device.
-                      Use it to set up your emergency contacts and hotwords.{"\n"}
+                      Use it to set up your emergency contacts and hotwords.{'\n'}
                     </Text>
                     <Button
                       title="Send voice data"
                       onPress={() => RNVoiceRecorder.Record({
                         format: 'wav',
                         onDone: (path) => {
-                          console.log('record done: ' + path)
+                          console.log('record done: ' + path);
+                          uploadAudio(path);
                         },
                         onCancel: () => {
                           console.log('on cancel');
@@ -43,7 +71,7 @@ export default function Home({ navigation }) {
                       })
                     }
                     />
-                    <Text>{"\n"}</Text>
+                    <Text>{'\n'}</Text>
                     <Button
                         title="Select Emergency Contacts"
                         onPress={() => navigation.navigate('ContactList')}
