@@ -7,9 +7,14 @@ import {
     View,
     Text,
     Button,
+    Alert,
   } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {RNVoiceRecorder} from 'react-native-voice-recorder';
+import {connect} from 'react-redux';
+import {store} from '../App';
+
+var st = store.getState();
 
 let uploadAudio = async (filePath) => {
   const path = `file://${filePath}`;
@@ -25,8 +30,8 @@ let uploadAudio = async (filePath) => {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
-        'username': 'test',
-        'password': 'test',
+        'username': st.username,
+        'password': st.password,
       },
       body: formData,
     });
@@ -38,7 +43,30 @@ let uploadAudio = async (filePath) => {
   }
 };
 
-export default function Home({ navigation }) {
+let sendData = async (state) => {
+  const res = await fetch('http://192.168.0.161:8080/writedb', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      state: state,
+    }),
+  });
+  //console.log(JSON.parse(JSON.stringify(res)));
+  //return res.message;
+  const json = await res.json();
+  console.log(json.message);
+  return json.message;
+};
+
+class Home extends React.Component {
+      constructor(props) {
+          super(props);
+          this.state = store.getState();
+      }
+      render() {
         return (
         <>
             <SafeAreaView style={styles.scrollView}>
@@ -52,7 +80,7 @@ export default function Home({ navigation }) {
                 )}
                 <View style={styles.body}>
                   <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Hi</Text>
+                  <Text style={styles.sectionTitle}>Hi {this.state.username}</Text>
                     <Text style={styles.sectionDescription}>
                       This is a companion app for your <Text style={styles.highlight}>UnDanger</Text> wearable device.
                       Use it to set up your emergency contacts and hotwords.{'\n'}
@@ -63,6 +91,7 @@ export default function Home({ navigation }) {
                         format: 'wav',
                         onDone: (path) => {
                           console.log('record done: ' + path);
+                          this.props.markRecorded();
                           uploadAudio(path);
                         },
                         onCancel: () => {
@@ -74,7 +103,55 @@ export default function Home({ navigation }) {
                     <Text>{'\n'}</Text>
                     <Button
                         title="Select Emergency Contacts"
-                        onPress={() => navigation.navigate('ContactList')}
+                        onPress={() => this.props.navigation.navigate('ContactList')}
+                    />
+                    <Text>{'\n'}</Text>
+                    <Button
+                        title="Confirm changes"
+                        color="green"
+                        onPress={() => {
+                          if (this.state.emergency == undefined) {
+                            Alert.alert(
+                              'Error',
+                              'Emergency contacts not yet set. Set them before proceeding.',
+                              [
+                                {text: 'OK', onPress: () => {
+                                      console.log('OK was pressed');
+                                      },
+                                  },
+                              ],
+                              { cancelable: false }
+                            );
+                          }
+                          else if (!this.state.recordingSaved) {
+                            Alert.alert(
+                              'Error',
+                              'Voice sample has not been recorded. Record it before proceeding.',
+                              [
+                                {text: 'OK', onPress: () => {
+                                      console.log('OK was pressed');
+                                      },
+                                  },
+                              ],
+                              { cancelable: false }
+                            );
+                          }
+                          else {
+                            sendData(this.state).then((res) => {
+                              Alert.alert(
+                                'Success',
+                                'Data successfully sent. You can safely logout now.',
+                                [
+                                  {text: 'OK', onPress: () => {
+                                        console.log('OK was pressed');
+                                        },
+                                    },
+                                ],
+                                { cancelable: false }
+                              );
+                            });
+                          }
+                        }}
                     />
                   </View>
                 </View>
@@ -82,7 +159,16 @@ export default function Home({ navigation }) {
             </SafeAreaView>
         </>
         );
+    }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+      markRecorded: () => dispatch({ type: 'SAVE_RECORDING'}),
+  };
+}
+
+export default connect(null,mapDispatchToProps)(Home);
 
 const styles = StyleSheet.create({
     bar: {

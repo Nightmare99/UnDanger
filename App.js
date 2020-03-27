@@ -23,6 +23,7 @@ const initialState = {
   username: '',
   password: '',
   emergency: [],
+  recordingSaved: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,11 +38,15 @@ const reducer = (state = initialState, action) => {
           state.emergency = action.payload;
           console.log(state);
           return state;
+      case 'SAVE_RECORDING':
+          state.recordingSaved = true;
+          console.log(state);
+          return state;
   }
   return state;
 };
 
-const store = createStore(reducer);
+export const store = createStore(reducer);
 
 class App extends Component {
   render() {

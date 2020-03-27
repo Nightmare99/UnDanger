@@ -5,15 +5,13 @@ import {
   Text,
   View,
   TextInput,
-  SafeAreaView,
   FlatList,
   ActivityIndicator,
-  Button,
 } from 'react-native';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
 import FAB from 'react-native-fab';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 
