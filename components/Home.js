@@ -21,7 +21,7 @@ let uploadAudio = async (filePath) => {
     type: 'audio/wav',
   });
   try {
-    const res = await fetch('http://192.168.43.32:8080/upload', {
+    const res = await fetch('http://192.168.0.161:8080/upload', {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -32,7 +32,7 @@ let uploadAudio = async (filePath) => {
     });
     console.log(res);
     const json = await res.json();
-    console.log(json);
+    console.log(json.message);
   } catch (err) {
     console.log(err);
   }

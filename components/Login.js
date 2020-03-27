@@ -10,6 +10,25 @@ import {
   } from 'react-native';
 import {connect} from 'react-redux';
 
+let sendData = async (username, password) => {
+    const res = await fetch('http://192.168.0.161:8080/data', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
+    //console.log(JSON.parse(JSON.stringify(res)));
+    //return res.message;
+    const json = await res.json();
+    console.log(json.message);
+    return json.message;
+  };
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -37,14 +56,32 @@ class Login extends Component {
                         username: this.state.username,
                         password: this.state.password,
                     };
-                    console.log(user);
-                    this.props.login(user);
-                    this.props.navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'Home' }],
+                    sendData(user.username, user.password).then((pass) => {
+                        if (pass === 'failed') {
+                            console.log('Failed login attempt');
+                            Alert.alert(
+                                'Login failed!',
+                                'Check credentials and try again.',
+                                [
+                                  {text: 'OK', onPress: () => {
+                                        console.log('OK was pressed');
+                                        },
+                                    },
+                                ],
+                                { cancelable: false }
+                              );
+                        }
+                        else {
+                            console.log(user);
+                            this.props.login(user);
+                            this.props.navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Home' }],
+                            });
+                        }
                     });
-                    }
                 }
+            }
             />
         </View>
         );
