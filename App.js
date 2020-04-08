@@ -8,7 +8,6 @@
  */
 
 import React, { Component } from 'react';
-import { Button } from 'react-native';
 import Home from './components/Home';
 import ContactList from './components/ContactList';
 import Login from './components/Login';
@@ -18,7 +17,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createStore} from 'redux';
-import {Provider, connect} from 'react-redux';
+import {Provider} from 'react-redux';
 const Stack = createStackNavigator();
 
 const initialState = {
