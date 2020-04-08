@@ -14,9 +14,7 @@ import {RNVoiceRecorder} from 'react-native-voice-recorder';
 import {connect} from 'react-redux';
 import {store} from '../App';
 
-var st = store.getState();
-
-let uploadAudio = async (filePath) => {
+let uploadAudio = async (filePath, st) => {
   const path = `file://${filePath}`;
   console.log(path);
   const formData = new FormData();
@@ -92,7 +90,7 @@ class Home extends React.Component {
                         onDone: (path) => {
                           console.log('record done: ' + path);
                           this.props.markRecorded();
-                          uploadAudio(path);
+                          uploadAudio(path, this.state);
                         },
                         onCancel: () => {
                           console.log('on cancel');

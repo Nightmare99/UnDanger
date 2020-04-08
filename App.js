@@ -11,6 +11,7 @@ import React, { Component } from 'react';
 import Home from './components/Home';
 import ContactList from './components/ContactList';
 import Login from './components/Login';
+import Register from './components/Register';
 import {StatusBar} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -20,8 +21,8 @@ import {Provider} from 'react-redux';
 const Stack = createStackNavigator();
 
 const initialState = {
-  username: '',
-  password: '',
+  username: 'null',
+  password: 'null',
   emergency: [],
   recordingSaved: false,
 };
@@ -47,6 +48,7 @@ const reducer = (state = initialState, action) => {
 };
 
 export const store = createStore(reducer);
+//console.log(store);
 
 class App extends Component {
   render() {
@@ -80,6 +82,13 @@ class App extends Component {
               component={Home}
               options={{
                 title: 'UnDanger',
+              }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{
+                title: 'Register',
               }}
             />
             <Stack.Screen

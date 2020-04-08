@@ -7,11 +7,12 @@ import {
     TextInput,
     Button,
     Alert,
+    TouchableOpacity,
   } from 'react-native';
 import {connect} from 'react-redux';
 
 let sendData = async (username, password) => {
-    const res = await fetch('http://192.168.0.161:8080/data', {
+    const res = await fetch('http://192.168.0.161:8080/login', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -83,6 +84,13 @@ class Login extends Component {
                 }
             }
             />
+            <Text>{'\n\n\n'}</Text>
+            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Don't have an account?</Text>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
+                    <Text style={{color: 'blue'}}>Register now</Text>
+                </TouchableOpacity>
+            </View>
         </View>
         );
     }
