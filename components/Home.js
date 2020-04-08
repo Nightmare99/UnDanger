@@ -151,6 +151,29 @@ class Home extends React.Component {
                           }
                         }}
                     />
+                    <Text>{'\n'}</Text>
+                    <Button
+                        title="Logout"
+                        color="red"
+                        onPress={() => {
+                          Alert.alert(
+                            'Logout?',
+                            'Are you sure you want to log out? Unsaved changes will be lost!',
+                            [
+                              {text: 'Cancel', onPress: () => {}},
+                              {text: 'Yes', onPress: () => {
+                                  this.props.logout();
+                                  this.props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Login' }],
+                                  });
+                                },
+                              },
+                            ],
+                            { cancelable: false }
+                          );
+                        }}
+                    />
                   </View>
                 </View>
               </ScrollView>
@@ -163,6 +186,7 @@ class Home extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
       markRecorded: () => dispatch({ type: 'SAVE_RECORDING'}),
+      logout: () => dispatch({ type: 'LOGOUT' }),
   };
 }
 

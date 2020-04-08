@@ -86,7 +86,7 @@ class Login extends Component {
             />
             <Text>{'\n\n\n'}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Don't have an account?</Text>
+                <Text>Don't have an account? </Text>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')}>
                     <Text style={{color: 'blue'}}>Register now</Text>
                 </TouchableOpacity>

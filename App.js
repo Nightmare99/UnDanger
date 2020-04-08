@@ -8,6 +8,7 @@
  */
 
 import React, { Component } from 'react';
+import { Button } from 'react-native';
 import Home from './components/Home';
 import ContactList from './components/ContactList';
 import Login from './components/Login';
@@ -17,7 +18,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createStore} from 'redux';
-import {Provider} from 'react-redux';
+import {Provider, connect} from 'react-redux';
 const Stack = createStackNavigator();
 
 const initialState = {
@@ -34,7 +35,7 @@ const reducer = (state = initialState, action) => {
           console.log(action.payload);
           return action.payload;
       case 'LOGOUT':
-          return { username: '', password: '', emergency: [] };
+          return { username: '', password: '', emergency: [], recordingSaved: false };
       case 'SET_EMERGENCY_CONTACTS':
           state.emergency = action.payload;
           console.log(state);
