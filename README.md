@@ -14,7 +14,7 @@
  ```npm start```
 
  ## Running android app
- ```npm android``
+ ```npm android```
  
  Make sure you either have an emulator or an android device with USB debugging enabled connected to the computer.
   
