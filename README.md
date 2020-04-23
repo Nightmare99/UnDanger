@@ -11,6 +11,6 @@
  ### Don't forget to install requirements for each module separately as per the docs.
  
  ## Credits
- - [Me]: https://github.com/Nightmare99 (duh)
- - [Shubhika]: https://github.com/zhackerx
- - [Vaishnavi]: https://github.com/vaish-muk
+ - [Me](https://github.com/Nightmare99) (duh)
+ - [Shubhika](https://github.com/zhackerx)
+ - [Vaishnavi](https://github.com/vaish-muk)
