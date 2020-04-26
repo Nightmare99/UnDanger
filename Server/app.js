@@ -14,7 +14,7 @@ var storage = multer.diskStorage({
       cb(null, 'uploads')
     },
     filename: function (req, file, cb) {
-      cb(null, req.headers.username + '-' + file.fieldname + '.wav');
+      cb(null, req.headers.username + '-' + file.fieldname + '-' + req.headers.filenum + '.wav');
     }
   });
 var upload = multer({ dest: 'uploads/', storage: storage });
@@ -72,10 +72,12 @@ app.post('/login', (req, res) => {
 app.post('/writedb', (req, res) => {
   console.log(req.body);
   var username = req.body.state.username;
-  var filePath = '~/UndangerServer/uploads/' + username + '-file.wav';
+  var filePath = '~/Undanger/Server/uploads/' + username + '-file.wav';
   var emergency = req.body.state.emergency;
-  var response = updateDetails(username, {recordingLocation: filePath, emergency: emergency});
-  res.send(JSON.stringify(response));
+  updateDetails(username, {recordingLocation: filePath, emergency: emergency}).then((result) => {
+    console.log(result);
+    res.send(JSON.stringify({message: result}));
+  }).catch((err) => console.log(err));
 });
 
 app.post('/upload', upload.single('file'), (req, res, next) => {

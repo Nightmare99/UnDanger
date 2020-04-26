@@ -22,17 +22,16 @@ export async function createUser(username, password, email) {
     }
 }
 
-export function updateDetails(username, fields) {
-    User.findOneAndUpdate({username: username}, fields, {upsert: true}, function(err, doc) {
-        if (err) {
-            console.log('There was an error:\n' + err);
-            return {message: 'failure'};
-        }
-        else {
-            console.log('Success');
-            return {message: 'success'};
-        }
-    });
+export async function updateDetails(username, fields) {
+    try {
+        var up = await User.findOneAndUpdate({username: username}, fields, {upsert: true});
+        console.log('Success');
+        return 'success';
+    }
+    catch(err) {
+        console.log('There was an error:\n' + err);
+        return 'failure';
+    }
 }
 
 export async function getDetails(username) {

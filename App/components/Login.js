@@ -56,6 +56,7 @@ class Login extends Component {
                     var user = {
                         username: this.state.username,
                         password: this.state.password,
+                        recordingSaved: 0,
                     };
                     sendData(user.username, user.password).then((pass) => {
                         if (pass === 'failed') {

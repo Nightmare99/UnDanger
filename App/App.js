@@ -24,7 +24,7 @@ const initialState = {
   username: 'null',
   password: 'null',
   emergency: [],
-  recordingSaved: false,
+  recordingSaved: 0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -34,13 +34,13 @@ const reducer = (state = initialState, action) => {
           console.log(action.payload);
           return action.payload;
       case 'LOGOUT':
-          return { username: '', password: '', emergency: [], recordingSaved: false };
+          return { username: '', password: '', emergency: [], recordingSaved: 0 };
       case 'SET_EMERGENCY_CONTACTS':
           state.emergency = action.payload;
           console.log(state);
           return state;
       case 'SAVE_RECORDING':
-          state.recordingSaved = true;
+          state.recordingSaved += 1;
           console.log(state);
           return state;
   }

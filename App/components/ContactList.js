@@ -7,6 +7,7 @@ import {
   TextInput,
   FlatList,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
@@ -32,7 +33,7 @@ class ContactList extends React.Component {
       {
         'title': 'Contacts',
         'message': 'This app would like to view your contacts.',
-        'buttonPositive': 'Please accept bare mortal',
+        'buttonPositive': 'Please accept',
       }
     ).then(() => {
       Contacts.getAll((err, contacts) => {
@@ -159,12 +160,28 @@ class ContactList extends React.Component {
           buttonColor="green"
           iconTextColor="#FFFFFF"
           onClickAction={() => {
-            console.log("Emergency contacts set!");
-            this.props.setEmergency(this.state.selected);
-            this.props.navigation.reset({
-              index: 0,
-              routes: [{ name: 'Home' }],
-            });
+            console.log(this.state.selected);
+            if (this.state.selected.length == 0) {
+              Alert.alert(
+                'Error',
+                'Emergency contacts cannot be empty. ',
+                [
+                  {text: 'OK', onPress: () => {
+                        console.log('OK was pressed');
+                        },
+                    },
+                ],
+                { cancelable: false }
+              );
+            }
+            else {
+              console.log("Emergency contacts set!");
+              this.props.setEmergency(this.state.selected);
+              this.props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
+            }
             }
           }
           visible={true}

@@ -14,7 +14,7 @@ import {RNVoiceRecorder} from 'react-native-voice-recorder';
 import {connect} from 'react-redux';
 import {store} from '../App';
 
-let uploadAudio = async (filePath, st) => {
+let uploadAudio = async (filePath, st, fileNum) => {
   const path = `file://${filePath}`;
   console.log(path);
   const formData = new FormData();
@@ -30,6 +30,7 @@ let uploadAudio = async (filePath, st) => {
         'Content-Type': 'multipart/form-data',
         'username': st.username,
         'password': st.password,
+        'fileNum': fileNum,
       },
       body: formData,
     });
@@ -81,64 +82,74 @@ class Home extends React.Component {
                   <Text style={styles.sectionTitle}>Hi {this.state.username}</Text>
                     <Text style={styles.sectionDescription}>
                       This is a companion app for your <Text style={styles.highlight}>UnDanger</Text> wearable device.
-                      Use it to set up your emergency contacts and hotwords.{'\n'}
+                      Follow the below steps to set it up.{'\n'}
                     </Text>
-                    <Button
-                      title="Send voice data"
-                      onPress={() => RNVoiceRecorder.Record({
-                        format: 'wav',
-                        onDone: (path) => {
-                          console.log('record done: ' + path);
-                          this.props.markRecorded();
-                          uploadAudio(path, this.state);
-                        },
-                        onCancel: () => {
-                          console.log('on cancel');
-                        },
-                      })
-                    }
-                    />
-                    <Text>{'\n'}</Text>
+                    <Text style={styles.sectionDescription}>Step 1: Record 3 samples of your hotword</Text>
+                    <View style={{ flexDirection: 'row', padding: 8, justifyContent: "center" }}>                    
+                      <Button
+                        title="Sample 1"
+                        onPress={() => RNVoiceRecorder.Record({
+                          format: 'wav',
+                          onDone: (path) => {
+                            console.log('record done: ' + path);
+                            this.props.markRecorded();
+                            uploadAudio(path, this.state, '1');
+                          },
+                          onCancel: () => {
+                            console.log('on cancel');
+                          },
+                        })
+                      }
+                      />
+                      <Text>{'\t'}</Text>
+                      <Button
+                        title="Sample 2"
+                        onPress={() => RNVoiceRecorder.Record({
+                          format: 'wav',
+                          onDone: (path) => {
+                            console.log('record done: ' + path);
+                            this.props.markRecorded();
+                            uploadAudio(path, this.state, '2');
+                          },
+                          onCancel: () => {
+                            console.log('on cancel');
+                          },
+                        })
+                      }
+                      />
+                      <Text>{'\t'}</Text>
+                      <Button
+                        title="Sample 3"
+                        onPress={() => RNVoiceRecorder.Record({
+                          format: 'wav',
+                          onDone: (path) => {
+                            console.log('record done: ' + path);
+                            this.props.markRecorded();
+                            uploadAudio(path, this.state, '3');
+                          },
+                          onCancel: () => {
+                            console.log('on cancel');
+                          },
+                        })
+                      }
+                      />
+                      <Text>{'\t'}</Text>
+                    </View>
+                    <Text style={styles.sectionDescription}>{'\n'}Step 2: Select some of your contacts to reach out in case of an emergency{'\n'}</Text>
                     <Button
                         title="Select Emergency Contacts"
                         onPress={() => this.props.navigation.navigate('ContactList')}
                     />
-                    <Text>{'\n'}</Text>
-                    <Button
-                        title="Confirm changes"
-                        color="green"
-                        onPress={() => {
-                          if (this.state.emergency == undefined) {
-                            Alert.alert(
-                              'Error',
-                              'Emergency contacts not yet set. Set them before proceeding.',
-                              [
-                                {text: 'OK', onPress: () => {
-                                      console.log('OK was pressed');
-                                      },
-                                  },
-                              ],
-                              { cancelable: false }
-                            );
-                          }
-                          else if (!this.state.recordingSaved) {
-                            Alert.alert(
-                              'Error',
-                              'Voice sample has not been recorded. Record it before proceeding.',
-                              [
-                                {text: 'OK', onPress: () => {
-                                      console.log('OK was pressed');
-                                      },
-                                  },
-                              ],
-                              { cancelable: false }
-                            );
-                          }
-                          else {
-                            sendData(this.state).then((res) => {
+                    <Text style={styles.sectionDescription}>{'\n'}Step 3: Save changes, logout if you want{'\n'}</Text>
+                    <View style={{ flexDirection: 'row', padding: 8, justifyContent: "center" }}>                    
+                      <Button
+                          title="Confirm changes"
+                          color="green"
+                          onPress={() => {
+                            if (this.state.emergency == undefined || this.state.emergency.length == 0) {
                               Alert.alert(
-                                'Success',
-                                'Data successfully sent. You can safely logout now.',
+                                'Error',
+                                'Emergency contacts not yet set. Set them before proceeding.',
                                 [
                                   {text: 'OK', onPress: () => {
                                         console.log('OK was pressed');
@@ -147,33 +158,62 @@ class Home extends React.Component {
                                 ],
                                 { cancelable: false }
                               );
-                            });
-                          }
-                        }}
-                    />
-                    <Text>{'\n'}</Text>
-                    <Button
-                        title="Logout"
-                        color="red"
-                        onPress={() => {
-                          Alert.alert(
-                            'Logout?',
-                            'Are you sure you want to log out? Unsaved changes will be lost!',
-                            [
-                              {text: 'Cancel', onPress: () => {}},
-                              {text: 'Yes', onPress: () => {
-                                  this.props.logout();
-                                  this.props.navigation.reset({
-                                    index: 0,
-                                    routes: [{ name: 'Login' }],
-                                  });
+                            }
+                            else if (this.state.recordingSaved <= 3) {
+                              Alert.alert(
+                                'Error',
+                                'All voice samples have not been recorded. Record it before proceeding.',
+                                [
+                                  {text: 'OK', onPress: () => {
+                                        console.log('OK was pressed');
+                                        },
+                                    },
+                                ],
+                                { cancelable: false }
+                              );
+                            }
+                            else {
+                              sendData(this.state).then((res) => {
+                                console.log(res);
+                                Alert.alert(
+                                  'Success',
+                                  'Data successfully sent. You can safely logout now.',
+                                  [
+                                    {text: 'OK', onPress: () => {
+                                          console.log('OK was pressed');
+                                          },
+                                      },
+                                  ],
+                                  { cancelable: false }
+                                );
+                              });
+                            }
+                          }}
+                      />
+                      <Text>{'\t\t'}</Text>
+                      <Button
+                          title="Logout"
+                          color="red"
+                          onPress={() => {
+                            Alert.alert(
+                              'Logout?',
+                              'Are you sure you want to log out? Unsaved changes will be lost!',
+                              [
+                                {text: 'Cancel', onPress: () => {}},
+                                {text: 'Yes', onPress: () => {
+                                    this.props.logout();
+                                    this.props.navigation.reset({
+                                      index: 0,
+                                      routes: [{ name: 'Login' }],
+                                    });
+                                  },
                                 },
-                              },
-                            ],
-                            { cancelable: false }
-                          );
-                        }}
-                    />
+                              ],
+                              { cancelable: false }
+                            );
+                          }}
+                      />
+                    </View>
                   </View>
                 </View>
               </ScrollView>
