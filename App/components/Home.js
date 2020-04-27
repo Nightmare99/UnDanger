@@ -159,7 +159,7 @@ class Home extends React.Component {
                                 { cancelable: false }
                               );
                             }
-                            else if (this.state.recordingSaved <= 3) {
+                            else if (this.state.recordingSaved < 3) {
                               Alert.alert(
                                 'Error',
                                 'All voice samples have not been recorded. Record it before proceeding.',
