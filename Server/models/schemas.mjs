@@ -15,9 +15,7 @@ export const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    recordingLocation: {
-        type: String,
-    },
+    recordingLocations: [String],
     emergency: [{
         name: {
             type: String,

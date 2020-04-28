@@ -24,6 +24,7 @@ export async function createUser(username, password, email) {
 
 export async function updateDetails(username, fields) {
     try {
+        console.log(fields);
         var up = await User.findOneAndUpdate({username: username}, fields, {upsert: true});
         console.log('Success');
         return 'success';

@@ -2,7 +2,10 @@ import express from 'express';
 import body_parser from 'body-parser'
 import multer from 'multer';
 import mongoose from 'mongoose';
+import path from 'path';
 import { createUser, getDetails, updateDetails } from './helpers/dbops.mjs';
+
+const __dirname = path.resolve();
 
 mongoose.connect('mongodb://localhost/test', {
   useNewUrlParser: true,
@@ -72,9 +75,14 @@ app.post('/login', (req, res) => {
 app.post('/writedb', (req, res) => {
   console.log(req.body);
   var username = req.body.state.username;
-  var filePath = '~/Undanger/Server/uploads/' + username + '-file.wav';
+  var filePaths = [];
+  filePaths.push(__dirname + '/uploads/' + username + '-file-1.wav');
+  filePaths.push(__dirname + '/uploads/' + username + '-file-2.wav');
+  filePaths.push(__dirname + '/uploads/' + username + '-file-3.wav');
+  console.log(filePaths);
   var emergency = req.body.state.emergency;
-  updateDetails(username, {recordingLocation: filePath, emergency: emergency}).then((result) => {
+  console.log(emergency);
+  updateDetails(username, {recordingLocations: filePaths, emergency: emergency}).then((result) => {
     console.log(result);
     res.send(JSON.stringify({message: result}));
   }).catch((err) => console.log(err));
